@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import Base from "./components/base";
+import "../src/components/mainStyle.css";
+import Card from "./components/Card";
+import Footer from "./components/Footer";
+import { getAllProducts } from "./admin/helper/adminapicall";
+// import Carousel from "./components/carousel";
 
-function App() {
+const App = () => {
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(false);
+  const loadAllProducts = () => {
+    getAllProducts().then((data) => {
+      console.log("Apps data", data);
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setProducts(data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    loadAllProducts();
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Base title="Kisaan Ki Dukaan" description="">
+        {/* <Carousel /> */}
+        <div />
+        <div className="row text-center">
+          <div className="row ">
+            {products.map((product, index) => {
+              return (
+                <div key={index} className="col-3 mb-5">
+                  <Card product={product} />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </Base>
+      <Footer />
+    </>
   );
-}
+};
 
 export default App;
